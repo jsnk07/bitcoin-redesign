@@ -14,7 +14,7 @@
 <meta name="twitter:image" content="https://jsnk07.github.io/bitcoin-redesign/img/og.png">
 <meta name="theme-color" content="#0f0505">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f0505'/%3E%3Cpath d='M32 8 52 20v24L32 56 12 44V20Z' fill='none' stroke='%23F27025' stroke-width='4' stroke-linejoin='round'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-weight='700' font-size='22' fill='%23F27025'%3E%E2%82%BF%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -386,6 +386,7 @@ footer a:hover{color:#fff;text-decoration:underline}
 .map{min-height:420px;background:#170707;z-index:0}
 .map.small{min-height:300px;padding:0;overflow:hidden}
 .leaflet-container{background:#170707;font-family:var(--body)}
+.map.osm .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.85) sepia(.35) saturate(1.4)}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#1d0a08;color:var(--ink);border:1px solid rgba(242,112,37,.3)}
 .leaflet-popup-content{margin:12px 14px;font-size:13px}
 .leaflet-popup-content b{font-size:14px}
@@ -1278,9 +1279,12 @@ footer{background:#0a0303;border-top:1px solid var(--line)}
   function gmaps(q){return 'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(q)}
   function waze(ll){return 'https://waze.com/ul?ll='+ll[0]+','+ll[1]+'&navigate=yes'}
   function tx(v){return Array.isArray(v)?L(v[0],v[1]):v}
-  var LJS=null;function loadLeaflet(){if(LJS)return LJS;LJS=new Promise(function(res,rej){if(window.L&&window.L.map)return res(window.L);var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';s.onload=function(){res(window.L)};s.onerror=rej;document.head.appendChild(s)});return LJS}
+  var LJS=null;function loadLeaflet(){if(LJS)return LJS;LJS=new Promise(function(res,rej){if(window.L&&window.L.map)return res(window.L);var s=document.createElement('script');s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';s.crossOrigin='';s.onload=function(){res(window.L)};s.onerror=rej;document.head.appendChild(s)});return LJS}
   function baseMap(Lf,el,opts){var m=Lf.map(el,Object.assign({scrollWheelZoom:false,zoomControl:true,attributionControl:true},opts||{}));
-    Lf.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'}).addTo(m);return m}
+    var errs=0,swapped=false,carto=Lf.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'}).addTo(m);
+    carto.on('tileerror',function(){if(swapped||++errs<3)return;swapped=true;m.removeLayer(carto);el.classList.add('osm');
+      Lf.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(m)});
+    return m}
   var pinIcon=null;function pin(Lf){return pinIcon||(pinIcon=Lf.divIcon({className:'',html:'<div class="zpin"></div>',iconSize:[22,22],iconAnchor:[11,11],popupAnchor:[0,-12]}))}
   var zmap=null,zmarkers={};
   function renderZList(){var ul=document.getElementById('zlist');if(!ul)return;
@@ -1289,11 +1293,11 @@ footer{background:#0a0303;border-top:1px solid var(--line)}
   function popup(z){return '<b>'+tx(z.n)+'</b><br>'+tx(z.d)+'<br><a href="'+gmaps(z.q)+'" target="_blank" rel="noopener">'+L('Cómo llegar','Directions')+' ↗</a> · <a href="'+waze(z.ll)+'" target="_blank" rel="noopener">Waze ↗</a>'}
   function initZoneMap(){var el=document.getElementById('zmap');if(!el)return;loadLeaflet().then(function(Lf){
     zmap=baseMap(Lf,el);var b=[];ZONES.forEach(function(z){var m=Lf.marker(z.ll,{icon:pin(Lf),title:tx(z.n)}).addTo(zmap).bindPopup(popup(z));zmarkers[z.k]=m;b.push(z.ll)});
-    zmap.fitBounds(b,{padding:[40,40]});}).catch(function(){el.innerHTML='<div class="empty" style="height:100%;min-height:300px">'+L('No se pudo cargar el mapa.','The map could not load.')+'</div>'})}
+    zmap.fitBounds(b,{padding:[40,40]});[300,900,2000].forEach(function(ms){setTimeout(function(){zmap.invalidateSize();zmap.fitBounds(b,{padding:[40,40]})},ms)});}).catch(function(){el.innerHTML='<div class="empty" style="height:100%;min-height:300px">'+L('No se pudo cargar el mapa.','The map could not load.')+'</div>'})}
   function initHistMap(){var el=document.getElementById('hmap');if(!el)return;loadLeaflet().then(function(Lf){
     var m=baseMap(Lf,el,{zoomControl:false});var pts=[{n:['Palacio Nacional','National Palace'],ll:[13.6977,-89.1916],q:'Palacio Nacional, San Salvador'},{n:'Plaza Gerardo Barrios',ll:[13.6985,-89.1913],q:'Plaza Gerardo Barrios, San Salvador'}];
     pts.forEach(function(p){Lf.marker(p.ll,{icon:pin(Lf)}).addTo(m).bindPopup('<b>'+tx(p.n)+'</b><br><a href="'+gmaps(p.q)+'" target="_blank" rel="noopener">'+L('Cómo llegar','Directions')+' ↗</a>')});
-    m.setView([13.6981,-89.1914],17);}).catch(function(){})}
+    m.setView([13.6981,-89.1914],17);[300,900,2000].forEach(function(ms){setTimeout(function(){m.invalidateSize();m.setView([13.6981,-89.1914],17)},ms)});}).catch(function(){})}
   var mio=('IntersectionObserver' in window)?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){if(e.target.id==='zmap')initZoneMap();else initHistMap();mio.unobserve(e.target)}})},{rootMargin:'300px'}):null;
   ['zmap','hmap'].forEach(function(id){var el=document.getElementById(id);if(!el)return;mio?mio.observe(el):(id==='zmap'?initZoneMap():initHistMap())});
   renderZList();
