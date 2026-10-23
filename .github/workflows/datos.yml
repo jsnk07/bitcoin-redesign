@@ -1,0 +1,56 @@
+name: Actualizar datos (reserva y certificados)
+
+on:
+  schedule:
+    - cron: "17 * * * *"   # cada hora
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: datos
+  cancel-in-progress: false
+
+jobs:
+  datos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Descargar reserva (ONBTC)
+        run: |
+          set -e
+          mkdir -p data
+          if curl -fsSL --retry 3 --max-time 60 -A "Mozilla/5.0 (bitcoin-redesign data job)" \
+               "https://bitcoin.gob.sv/api/v1/wallet/ONBTC" -o /tmp/reserve.json \
+             && jq -e 'type=="object" and length>0' /tmp/reserve.json >/dev/null; then
+            jq -c '. + {"__meta":{"source":"file"}}' /tmp/reserve.json > data/reserve.json
+            echo "Reserva actualizada: $(jq 'length' /tmp/reserve.json) direcciones"
+          else
+            echo "::warning::No se pudo descargar la reserva; se conserva el archivo anterior"
+          fi
+
+      - name: Descargar certificados CUBO+
+        run: |
+          set -e
+          if curl -fsSL --retry 3 --max-time 60 -A "Mozilla/5.0 (bitcoin-redesign data job)" \
+               "https://bitcoin.gob.sv/api/v1/services/sp/verified/cubo_certificates" -o /tmp/certs.json \
+             && jq -e 'type=="object" and length>0' /tmp/certs.json >/dev/null; then
+            jq -c '.' /tmp/certs.json > data/cubo_certificates.json
+            echo "Certificados: $(jq 'length' /tmp/certs.json)"
+          else
+            echo "::warning::No se pudieron descargar los certificados; se conserva el archivo anterior"
+          fi
+
+      - name: Guardar cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "Sin cambios"
+          else
+            git commit -m "Datos: actualización automática"
+            git push
+          fi
