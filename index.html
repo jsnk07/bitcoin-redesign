@@ -500,7 +500,7 @@ footer{background:#0a0303;border-top:1px solid var(--line)}
 
     <div class="res-grid reveal">
       <div class="dglass chart-card">
-        <div class="hd"><h3><span class="es">Saldo de la reserva · 12 meses</span><span class="en">Reserve balance · 12 months</span></h3><span class="mono muted" style="font-size:12px" id="chartRange"></span></div>
+        <div class="hd"><h3><span class="es">Saldo de la reserva · último mes</span><span class="en">Reserve balance · last month</span></h3><span class="mono muted" style="font-size:12px" id="chartRange"></span></div>
         <div class="chart" id="chart"><div class="empty"><span class="es">Cargando datos en cadena…</span><span class="en">Loading on-chain data…</span></div></div>
       </div>
       <div class="dglass chart-card">
@@ -923,7 +923,7 @@ footer{background:#0a0303;border-top:1px solid var(--line)}
   function renderChart(){
     var el=document.getElementById('chart'),rng=document.getElementById('chartRange');
     if(!S.wallet){if(S.walletErr){el.innerHTML=emptyMsg('La gráfica se dibuja con el historial en cadena de la reserva al publicarse en bitcoin.gob.sv.','The chart is drawn from the reserve\'s on-chain history once published on bitcoin.gob.sv.');rng.textContent='';}return}
-    var now=Date.now()/1000,from=now-365*86400,bal=S.wallet.total,pts=[[now,bal]];
+    var now=Date.now()/1000,from=now-30*86400,bal=S.wallet.total,pts=[[now,bal]];
     S.wallet.txs.forEach(function(t){if(t.time<from)return;pts.push([t.time,bal]);bal-=t.value;pts.push([t.time-1,bal]);});
     pts.push([from,bal]);pts.sort(function(a,b){return a[0]-b[0]});
     if(pts.length<3){el.innerHTML=emptyMsg('Historial insuficiente para graficar.','Not enough history to chart.');return}
@@ -933,7 +933,7 @@ footer{background:#0a0303;border-top:1px solid var(--line)}
     var d=pts.map(function(p,i){return (i?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1)}).join(' ');
     var area=d+' L'+X(now).toFixed(1)+' '+(H-P.b)+' L'+X(from).toFixed(1)+' '+(H-P.b)+' Z';
     var g='';for(var i=0;i<=3;i++){var v=y0+(y1-y0)*i/3,y=Y(v);g+='<line x1="'+P.l+'" x2="'+(W-P.r)+'" y1="'+y+'" y2="'+y+'" stroke="rgba(255,255,255,.08)"/><text x="'+(P.l-8)+'" y="'+(y+4)+'" text-anchor="end" fill="#c49a8a" font-size="11" font-family="JetBrains Mono">'+fmt(v,0)+'</text>';}
-    var months='';for(var m=0;m<=4;m++){var t=from+(now-from)*m/4;months+='<text x="'+X(t)+'" y="'+(H-6)+'" text-anchor="'+(m===0?'start':m===4?'end':'middle')+'" fill="#c49a8a" font-size="11" font-family="JetBrains Mono">'+new Date(t*1000).toLocaleDateString(root.lang==='en'?'en-US':'es-SV',{month:'short',year:'2-digit'})+'</text>';}
+    var months='';for(var m=0;m<=4;m++){var t=from+(now-from)*m/4;months+='<text x="'+X(t)+'" y="'+(H-6)+'" text-anchor="'+(m===0?'start':m===4?'end':'middle')+'" fill="#c49a8a" font-size="11" font-family="JetBrains Mono">'+new Date(t*1000).toLocaleDateString(root.lang==='en'?'en-US':'es-SV',{day:'numeric',month:'short'})+'</text>';}
     el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" role="img" aria-label="'+L('Saldo de la reserva','Reserve balance')+'"><defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F27025" stop-opacity=".45"/><stop offset="1" stop-color="#F27025" stop-opacity="0"/></linearGradient></defs>'+g+'<path d="'+area+'" fill="url(#ga)"/><path d="'+d+'" fill="none" stroke="#FFB27A" stroke-width="2.2" vector-effect="non-scaling-stroke" style="filter:drop-shadow(0 0 6px rgba(242,112,37,.9))"/><circle cx="'+X(now)+'" cy="'+Y(S.wallet.total)+'" r="4.5" fill="#fff"/>'+months+'</svg>';
     rng.textContent=fmt(pts[0][1],0)+' → '+fmt(S.wallet.total,0)+' BTC';
   }
