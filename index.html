@@ -317,7 +317,9 @@ section.s{padding:96px 0;position:relative}
 .feed-body.nofeed{height:auto!important;background:transparent;flex:1;display:flex;align-items:center}
 .feed-body.nofeed .feed-live{position:absolute;left:0;top:0;width:100%;height:1px;overflow:hidden;opacity:0;pointer-events:none}
 .feed-body:not(.nofeed) .feed-card{display:none}
-.feed-body:not(.nofeed) .feed-live{height:100%;overflow:auto}
+.feed-body:not(.nofeed) .feed-live{height:100%;overflow:auto;padding:4px 12px 12px;scrollbar-width:thin;scrollbar-color:#5a2a20 transparent}
+.post-slot{max-width:550px;margin:0 auto}
+.post-slot:empty{display:none}
 .feed-body.nofeed{align-items:stretch}
 .feed-card{padding:18px;display:flex;flex-direction:column;gap:14px;width:100%}
 .fc-banner{flex:1;min-height:110px;border-radius:16px;background:radial-gradient(120% 90% at 80% 10%,rgba(255,178,122,.55),transparent 55%),linear-gradient(135deg,#F27025,#A64521 60%,#400C0C);display:flex;align-items:center;justify-content:center;color:#fff;position:relative;overflow:hidden}
@@ -535,7 +537,7 @@ footer{background:#0a0303;border-top:1px solid var(--line)}
 <section class="s" id="actualizaciones">
   <div class="wrap">
     <div class="shead reveal">
-      <div><div class="idx">02</div><div class="eyebrow"><span class="es">En vivo desde X</span><span class="en">Live from X</span></div>
+      <div><div class="idx">02</div><div class="eyebrow"><span class="es">Desde X</span><span class="en">From X</span></div>
       <h2 class="display" style="margin-top:10px"><span class="es">Novedades</span><span class="en">Updates</span></h2></div>
       <p class="lead"><span class="es">Lo último del Presidente y de la Oficina Nacional de Bitcoin, junto a los hitos clave del programa.</span><span class="en">The latest from the President and the National Bitcoin Office, alongside the program's key milestones.</span></p>
     </div>
@@ -558,6 +560,7 @@ footer{background:#0a0303;border-top:1px solid var(--line)}
           <li><div class="d">FEB · 2026</div><div class="t"><span class="es">Bitcoin Diploma 2.0: primer lote de libros impreso</span><span class="en">Bitcoin Diploma 2.0: first batch of textbooks printed</span></div><a class="src" href="https://phemex.com/news/article/el-salvador-launches-bitcoin-diploma-20-for-public-schools-62334" target="_blank" rel="noopener">Phemex News</a></li>
           <li><div class="d">ENE 15 · 2026</div><div class="t"><span class="es">“Estamos construyendo dos ZONAS BITCOIN más”</span><span class="en">“We are building two more BITCOIN ZONES”</span></div><a class="src" href="https://es.beincrypto.com/el-salvador-revela-construccion-2-nuevas-zonas-bitcoin/" target="_blank" rel="noopener">BeInCrypto</a></li>
           <li><div class="d">ENE 7 · 2026</div><div class="t"><span class="es">CUBO+ abre convocatoria para una nueva generación</span><span class="en">CUBO+ opens applications for a new cohort</span></div><a class="src" href="https://www.criptonoticias.com/comunidad/programa-educacion-bitcoin-cubo-inscripciones-el-salvador/" target="_blank" rel="noopener">CriptoNoticias</a></li>
+          <li><div class="d">DIC 6 · 2025</div><div class="t"><span class="es">Abre la Zona Bitcoin del Aeropuerto</span><span class="en">The Airport Bitcoin Zone opens</span></div><a class="src" href="https://x.com/BitcoinZoneSV/status/1997395809051062356" target="_blank" rel="noopener">@BitcoinZoneSV</a></li>
           <li><div class="d">AGO 29 · 2025</div><div class="t"><span class="es">La reserva se distribuye en 14 direcciones</span><span class="en">Reserve split across 14 addresses</span></div><a class="src" href="https://www.theblock.co/post/368850/el-salvador-splits-bitcoin-holdings-between-14-addresses-to-enhance-security-against-quantum-threats" target="_blank" rel="noopener">The Block</a></li>
         </ul>
       </div>
@@ -575,7 +578,7 @@ footer{background:#0a0303;border-top:1px solid var(--line)}
     </div>
     <div class="zones reveal">
       <div class="glass zone"><div class="no">ZONA 01</div><h3>BINAES</h3><div class="loc"><svg><use href="#pin"/></svg><span class="es">Biblioteca Nacional · Centro Histórico, San Salvador</span><span class="en">National Library · Historic Center, San Salvador</span></div><p><span class="es">La primera Zona Bitcoin, en el corazón del Centro Histórico.</span><span class="en">The first Bitcoin Zone, in the heart of the Historic Center.</span></p><svg class="ico"><use href="#zone"/></svg></div>
-      <div class="glass zone"><div class="no">ZONA 02</div><h3><span class="es">Aeropuerto</span><span class="en">Airport</span></h3><div class="loc"><svg><use href="#pin"/></svg><span class="es">Aeropuerto Internacional · La Paz</span><span class="en">International Airport · La Paz</span></div><p><span class="es">La primera impresión de Bitcoin Country para quien llega al país.</span><span class="en">Bitcoin Country's first impression for everyone arriving in the country.</span></p><svg class="ico"><use href="#zone"/></svg></div>
+      <div class="glass zone"><div class="no">ZONA 02</div><h3><span class="es">Aeropuerto</span><span class="en">Airport</span></h3><div class="loc"><svg><use href="#pin"/></svg><span class="es">Aeropuerto Internacional · La Paz</span><span class="en">International Airport · La Paz</span></div><p><span class="es">Abierta todos los días de 10 AM a 5 PM, atendida por estudiantes de CUBO+. La primera impresión de Bitcoin Country.</span><span class="en">Open every day 10 AM–5 PM, staffed by CUBO+ students. Bitcoin Country's first impression.</span></p><span class="tag" style="margin:12px 0 0;align-self:flex-start"><span class="es">Abierta</span><span class="en">Open</span></span><svg class="ico"><use href="#zone"/></svg></div>
       <div class="glass zone"><div class="no">ZONA 03</div><h3>Panchimalco</h3><div class="loc"><svg><use href="#pin"/></svg>San Salvador Sur</div><p><span class="es">Espacio de aprendizaje y formación para la comunidad local.</span><span class="en">A learning and training space for the local community.</span></p><svg class="ico"><use href="#zone"/></svg></div>
       <div class="glass zone"><div class="no">ZONA 04</div><h3>Apopa</h3><div class="loc"><svg><use href="#pin"/></svg>San Salvador Norte</div><p><span class="es">Educación Bitcoin y finanzas personales al norte de la capital.</span><span class="en">Bitcoin education and personal finance north of the capital.</span></p><svg class="ico"><use href="#zone"/></svg></div>
     </div>
@@ -834,14 +837,29 @@ footer{background:#0a0303;border-top:1px solid var(--line)}
     if(window.twttr&&window.twttr.widgets)return res(window.twttr);
     var s=document.createElement('script');s.src='https://platform.twitter.com/widgets.js';s.async=true;s.charset='utf-8';
     s.onload=function(){(window.twttr&&window.twttr.ready)?window.twttr.ready(res):rej()};s.onerror=rej;document.head.appendChild(s);});return WJS;}
+  // ✏️ PARA ACTUALIZAR LOS FEEDS: pega aquí los enlaces de las publicaciones de X (la primera aparece arriba).
+  var POSTS={
+    nayibbukele:['https://x.com/nayibbukele/status/2096018188454568034','https://x.com/nayibbukele/status/1964774115405070742'],
+    bitcoinofficesv:['https://x.com/bitcoinofficesv/status/2088401582224216301','https://x.com/bitcoinofficesv/status/2053312439152713856','https://x.com/bitcoinofficesv/status/2007477921896607752'],
+    bitcoinzonesv:['https://x.com/BitcoinZoneSV/status/1997395809051062356'],
+    cuboplus:['https://x.com/cuboplus/status/2008302895154749513'],
+    btchistoricosv:['https://x.com/stacyherbert/status/2096715811494805758','https://x.com/bitcoinofficesv/status/2053312439152713856']
+  };
+  function postId(u){var m=String(u).match(/status\/(\d+)/);return m?m[1]:null}
   function mountFeed(el){
-    var h=el.dataset.handle,ht=el.dataset.h||560;el.classList.add('nofeed');
-    el.innerHTML='<div class="feed-card">'+cardInner(h)+'</div><div class="feed-live"><a class="twitter-timeline" data-height="'+ht+'" data-chrome="noheader nofooter noborders transparent" data-dnt="true" data-theme="dark" data-lang="'+root.lang+'" href="https://twitter.com/'+h+'">@'+h+'</a></div>';
+    var h=el.dataset.handle;el.classList.add('nofeed');
+    el.innerHTML='<div class="feed-card">'+cardInner(h)+'</div><div class="feed-live"></div>';
   }
   function loadLive(el){
-    var ht=el.dataset.h||560;
-    loadWidgets().then(function(tw){tw.widgets.load(el.querySelector('.feed-live'));var n=0,iv=setInterval(function(){
-      var f=el.querySelector('.feed-live iframe');if(f&&f.offsetHeight>150){el.classList.remove('nofeed');el.style.height=ht+'px';clearInterval(iv)}else if(++n>20)clearInterval(iv)},1000);}).catch(function(){});
+    var h=el.dataset.handle,ht=el.dataset.h||560,box=el.querySelector('.feed-live'),ids=(POSTS[h]||[]).map(postId).filter(Boolean);
+    if(!ids.length)return;
+    loadWidgets().then(function(tw){
+      var shown=false;
+      ids.forEach(function(id){var d=document.createElement('div');d.className='post-slot';box.appendChild(d);
+        tw.widgets.createTweet(id,d,{theme:'dark',dnt:true,align:'center',conversation:'none',lang:root.lang}).then(function(w){
+          if(w&&!shown){shown=true;el.classList.remove('nofeed');el.style.height=ht+'px';}
+        });});
+    }).catch(function(){});
   }
   var feeds=document.querySelectorAll('.feed-body[data-handle]');
   feeds.forEach(mountFeed);
